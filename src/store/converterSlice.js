@@ -5,7 +5,7 @@ export const fetchConverter = createAsyncThunk(
   "converter/fetchConverter",
   async ({ first, second }) => {
     let response = await axios(
-      `https://api.fastforex.io//fetch-one?from=${first}&to=${second}&api_key=e1c0b18c05-84c45d1133-rf2mgd`
+      `https://api.fastforex.io//fetch-one?from=${first}&to=${second}&api_key=140c6ff1c1-1a1cd3f413-ri6qp4`
     );
     return response;
   }
@@ -13,14 +13,14 @@ export const fetchConverter = createAsyncThunk(
 
 export const fetchUSD = createAsyncThunk("converter/fetchUSD", async () => {
   let response = await axios(
-    "https://api.fastforex.io//fetch-one?from=USD&to=UAH&api_key=e1c0b18c05-84c45d1133-rf2mgd"
+    "https://api.fastforex.io//fetch-one?from=USD&to=UAH&api_key=140c6ff1c1-1a1cd3f413-ri6qp4"
   );
   return response;
 });
 
 export const fetchEUR = createAsyncThunk("converter/fetchEUR", async () => {
   let response = await axios(
-    "https://api.fastforex.io//fetch-one?from=EUR&to=UAH&api_key=e1c0b18c05-84c45d1133-rf2mgd"
+    "https://api.fastforex.io//fetch-one?from=EUR&to=UAH&api_key=140c6ff1c1-1a1cd3f413-ri6qp4"
   );
   return response;
 });
@@ -45,16 +45,20 @@ const converterSlice = createSlice({
     date: null,
     firstField: "",
     secondField: "",
+    firstFieldImage: 'USD',
+    secondFieldImage: 'UAH',
   },
   reducers: {
     currencySelection: (state, actions) => {
       if (actions.payload.field === "first") {
         state.currency.firstSelect = actions.payload.currency;
+        state.firstFieldImage = actions.payload.currency
       } else {
         state.currency.secondSelect = actions.payload.currency;
+        state.secondFieldImage = actions.payload.currency
       }
     },
-    converter: (state, actions) => {
+    converterSliceMethod: (state, actions) => {
       if (actions.payload.type === "field") {
         if (actions.payload.field === "first") {
           state.firstField = actions.payload.num;
@@ -104,7 +108,7 @@ const converterSlice = createSlice({
   },
 });
 
-export const { currencySelection, newCurrencySelect, converter } =
+export const { currencySelection, newCurrencySelect, converterSliceMethod } =
   converterSlice.actions;
 
 export default converterSlice.reducer;

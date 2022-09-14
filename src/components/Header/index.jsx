@@ -1,29 +1,51 @@
+import { useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { ExchangReates } from "../Exchange-rates";
 import "./Header.css";
 
 export const Header = () => {
-  const currencyUSD = useSelector(item => item.converter.currencyUSD);
 
-  const currencyEUR = useSelector(item => item.converter.currencyEUR);
+  const {converter} = useSelector((item) => item);
 
-  const date = useSelector(item => item.converter.date)
+  const [date, setDate] = useState(null);
 
-  const status = useSelector(item => item.converter.requestStatus);
+  const reverseDate = () => {
+    const splitDate = converter.date.split("-");
+    splitDate.reverse();
+    const joinDate = splitDate.join(".");
+    setDate(joinDate);
+  }
 
+
+  useEffect(() => {
+    if(converter.date) {
+      reverseDate();
+    }
+  }, [converter.date]);
+
+ 
   return (
     <header>
       <div className="header">
+        {converter.requestStatus === "pending" && <div className="loader">Загрузка...</div>}
 
-        {status === 'pending' && <div className="loader">Загрузка...</div> }
-
-        {status === 'fulfilled' && 
-        <div className="currency-header">
-          <h1>Курс валюты к гривне на <span className="exchange-date">{date}</span></h1>
-          <ExchangReates currency={currencyUSD.currency} rate={currencyUSD.rate}/>
-          <ExchangReates currency={currencyEUR.currency} rate={currencyEUR.rate}/>
-        </div>}
-        
+        {converter.requestStatus === "fulfilled" && (
+          <div className="currency-header">
+            <h1>
+              Курс валюты к гривне на{" "}
+              <span className="exchange-date">{date}</span>
+            </h1>
+            <ExchangReates
+              currency={converter.currencyUSD.currency}
+              rate={converter.currencyUSD.rate}
+            />
+            <ExchangReates
+              currency={converter.currencyEUR.currency}
+              rate={converter.currencyEUR.rate}
+            />
+          </div>
+        )}
       </div>
     </header>
   );

@@ -1,35 +1,43 @@
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { fetchConverter, fetchUSD, fetchEUR } from './store/converterSlice';
-import './App.css';
-import { Converter } from './components/Converter';
-import { Header } from './components/Header';
-
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchConverter, fetchUSD, fetchEUR } from "./store/converterSlice";
+import "./App.css";
+import { Converter } from "./components/Converter";
+import { Header } from "./components/Header";
 
 function App() {
+  const dispatch = useDispatch();
 
-  const dispatch = useDispatch()
-
-  const currency = useSelector(item => item.converter.currency)
-
-  const firstField = useSelector(item => item.converter.firstField)  
-
-  const secondField = useSelector(item => item.converter.secondField)
+  const {converter} = useSelector((item) => item);
 
   useEffect(() => {
-    dispatch(fetchConverter({first: currency.firstSelect, second: currency.secondSelect}))
-    dispatch(fetchUSD())
-    dispatch(fetchEUR())
-  },[])
-
+    dispatch(
+      fetchConverter({
+        first: converter.currency.firstSelect,
+        second: converter.currency.secondSelect,
+      })
+    );
+    dispatch(fetchUSD());
+    dispatch(fetchEUR());
+  }, []);
 
   return (
     <div className="App">
       <Header />
-      <div className='wrapper'>
-        <div className='currency'>
-          <Converter currency={currency.firstSelect} field='first' fieldsState={firstField}/>
-          <Converter currency={currency.secondSelect} field='second' fieldsState={secondField}/>
+      <div className="wrapper">
+        <div className="currency">
+          <Converter
+            currency={converter.currency.firstSelect}
+            field="first"
+            fieldsState={converter.firstField}
+            img={converter.firstFieldImage}
+          />
+          <Converter
+            currency={converter.currency.secondSelect}
+            field="second"
+            fieldsState={converter.secondField}
+            img={converter.secondFieldImage}
+          />
         </div>
       </div>
     </div>

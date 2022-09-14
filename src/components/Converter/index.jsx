@@ -1,36 +1,61 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux/es/exports'
-import { currencySelection, fetchConverter, converter } from '../../store/converterSlice'
-import './Converter.css'
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux/es/exports";
+import {
+  currencySelection,
+  fetchConverter,
+  converterSliceMethod,
+} from "../../store/converterSlice";
+import "./Converter.css";
+import { flags } from "../../constants";
 
-export const Converter = ({currency, field, fieldsState}) => {
+export const Converter = ({ currency, field, fieldsState, img }) => {
+  const image = flags[img]
 
-    const dispatch = useDispatch()
+  const {converter} = useSelector((item) => item);
 
-    const rate = useSelector(item => item.converter.rate)
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-      dispatch(converter({field: field, num: null, type: 'select'}))
-    }, [rate])
+  useEffect(() => {
+    dispatch(converterSliceMethod({ field, num: null, type: "select" }));
+  }, [converter.rate]);
 
-    const stateCurrency = useSelector(item => item.converter.currency)
-
-    useEffect(() => {
-      dispatch(fetchConverter({first: stateCurrency.firstSelect, second: stateCurrency.secondSelect}))
-    },[currency])
+  useEffect(() => {
+    dispatch(
+      fetchConverter({
+        first: converter.currency.firstSelect,
+        second: converter.currency.secondSelect,
+      })
+    );
+  }, [currency]);
 
   return (
-    <div className='converter'>
-        <label>
-          <select value={currency} onChange={e => dispatch(currencySelection({currency: e.target.value, field: field}))}>
-            <option value="USD">USD (Доллар США)</option>
-            <option value="EUR">EUR (Евро)</option>
-            <option value="UAH">UAH (Украинская гривна)</option>
-            <option value="GBP">GBP (Фунт стерлингов)</option>
-            <option value="JPY">JPY (Японская иена)</option>
-          </select>
-        </label>
-        <input type="number" value={fieldsState} onChange={e => dispatch(converter({field: field, num: e.target.value, type: 'field'}))}/>
+    <div className="converter">
+      <img src={image} alt="" />
+      <label>
+        <select
+          value={currency}
+          onChange={(e) =>
+            dispatch(
+              currencySelection({ currency: e.target.value, field })
+            )
+          }
+        >
+          <option value="USD">USD (Доллар США)</option>
+          <option value="EUR">EUR (Евро)</option>
+          <option value="UAH">UAH (Украинская гривна)</option>
+          <option value="GBP">GBP (Фунт стерлингов)</option>
+          <option value="JPY">JPY (Японская иена)</option>
+        </select>
+      </label>
+      <input
+        type="number"
+        value={fieldsState}
+        onChange={(e) =>
+          dispatch(
+            converterSliceMethod({ field, num: e.target.value, type: "field" })
+          )
+        }
+      />
     </div>
-  )
-}
+  );
+};
