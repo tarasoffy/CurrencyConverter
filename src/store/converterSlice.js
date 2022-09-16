@@ -59,7 +59,8 @@ const converterSlice = createSlice({
       }
     },
     converterSliceMethod: (state, actions) => {
-      if (actions.payload.type === "field") {
+
+      const convertorField = () => {
         if (actions.payload.field === "first") {
           state.firstField = actions.payload.num;
           const num = actions.payload.num * state.rate;
@@ -73,7 +74,9 @@ const converterSlice = createSlice({
           state.firstField = "";
           state.secondField = "";
         }
-      } else {
+      };
+
+      const convertorSelect = () => {
         if (actions.payload.field === "first") {
           const num = state.secondField / state.rate;
           state.firstField = Math.floor(num * 100) / 100;
@@ -85,6 +88,12 @@ const converterSlice = createSlice({
           state.firstField = "";
           state.secondField = "";
         }
+      };
+
+      if (actions.payload.type === "field") {
+        convertorField()
+      } else {
+        convertorSelect()
       }
     },
   },
@@ -108,7 +117,7 @@ const converterSlice = createSlice({
   },
 });
 
-export const { currencySelection, newCurrencySelect, converterSliceMethod } =
+export const { currencySelection, newCurrencySelect, converterSliceMethod, convertorFirstField, convertorSecondField } =
   converterSlice.actions;
 
 export default converterSlice.reducer;

@@ -9,6 +9,7 @@ import "./Converter.css";
 import { flags } from "../../constants";
 
 export const Converter = ({ currency, field, fieldsState, img }) => {
+
   const image = flags[img]
 
   const {converter} = useSelector((item) => item);
